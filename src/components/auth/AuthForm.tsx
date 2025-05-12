@@ -3,7 +3,6 @@ import Link from "next/link";
 import { AuthProps } from "./AuthType";
 import { RegisterOptions, useForm } from "react-hook-form";
 import { Input } from "../";
-import { authSignUpBody } from "@/services";
 export default function AuthForm({
   title,
   Submit,
