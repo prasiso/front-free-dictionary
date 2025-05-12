@@ -11,7 +11,9 @@ export default function SignUpPage() {
   const handleSignUp = async (data: authSignUpBody) => {
     try {
       await showLoading(async ()=> {
-        await AuthPostSignUp(data);
+        const resp = await AuthPostSignUp(data);
+        if(resp.token)
+          localStorage.setItem('user', JSON.stringify(resp))
       });
       showAlert({
         type: "success",
@@ -19,7 +21,7 @@ export default function SignUpPage() {
           "Usuário cadastrado com sucesso! você será redirecionado para o dashboard",
       });
 
-      // router.push("/dashboard");
+      router.push("/dashboard");
     } catch (error) {
       const message = catchExcpetion(error);
       showAlert({ type: "error", message });
