@@ -1,4 +1,4 @@
-import { Control, FieldErrors } from "react-hook-form"
+import { Control, FieldErrors, RegisterOptions } from "react-hook-form"
 
 export interface InputType {
     name: string;
@@ -8,4 +8,5 @@ export interface InputType {
     required?: boolean;
     showEye?: boolean;
     errors?: FieldErrors;
+    rules?: RegisterOptions
 }

@@ -15,7 +15,7 @@ export default function SignUpPage() {
       Submit={handleSignUp}
       linkText="Já tem conta? Faça Login"
       linkHref="/login"
-      includeName={true}
+      isSignUp={true}
     />
   );
 }

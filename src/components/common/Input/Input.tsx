@@ -9,16 +9,16 @@ export function Input({
   control,
   showEye = false,
   type = "text",
+  rules,
 }: InputType) {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(true);
   const togglePass = () => {
     setShowPassword((prev) => !prev);
   };
 
   const showPass = (type: string) => {
-    if(type !== 'password')
-      return type
-    return showPassword ? "password" : "text"
+    if (type !== "password") return type;
+    return showPassword ? "password" : "text";
   };
   return (
     <div className="mb-4">
@@ -33,6 +33,7 @@ export function Input({
         control={control}
         rules={{
           required: required ? `o Campo ${label} é obrigatório` : false,
+          ...rules,
         }}
         render={({ field, fieldState }) => (
           <>
@@ -56,12 +57,12 @@ export function Input({
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </span>
               )}
-              {fieldState.error && (
-                <p className="text-red-500 text-sm mt-1">
-                  {fieldState.error.message}
-                </p>
-              )}
             </div>
+            {fieldState.error && (
+              <p className="text-red-500 text-sm mt-1">
+                {fieldState.error.message}
+              </p>
+            )}
           </>
         )}
       ></Controller>

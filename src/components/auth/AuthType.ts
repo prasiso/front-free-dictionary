@@ -3,5 +3,5 @@ export interface AuthProps {
     Submit: ({ email, password, name }: { email: string, password: string, name: string }) => void
     linkText: string
     linkHref: string
-    includeName?: boolean
+    isSignUp?: boolean
 }
