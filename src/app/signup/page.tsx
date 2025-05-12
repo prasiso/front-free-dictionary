@@ -6,12 +6,13 @@ import { AuthPostSignUp, authSignUpBody } from "@/services";
 import { useUI } from "@/context/UIContext";
 import { catchExcpetion } from "@/helper";
 export default function SignUpPage() {
-  const { setLoading, showAlert } = useUI();
+  const { showLoading, setLoading, showAlert } = useUI();
   const router = useRouter();
   const handleSignUp = async (data: authSignUpBody) => {
     try {
-      setLoading(true);
-      await AuthPostSignUp(data);
+      await showLoading(async ()=> {
+        await AuthPostSignUp(data);
+      });
       showAlert({
         type: "success",
         message:
@@ -20,7 +21,7 @@ export default function SignUpPage() {
 
       // router.push("/dashboard");
     } catch (error) {
-      const message = catchExcpetion(error)
+      const message = catchExcpetion(error);
       showAlert({ type: "error", message });
     } finally {
       setLoading(false);
