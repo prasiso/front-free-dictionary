@@ -1,7 +1,18 @@
-'use client'
+"use client";
 import { useUI } from "@/context/UIContext";
-import { Loading } from "./Loading";
+import { Loading, Alert } from ".";
 export function UIOverlay() {
-  const { loading } = useUI();
-  return <>{loading && <Loading />}</>;
+  const { loading, alert, showAlert } = useUI();
+  return (
+    <>
+      {loading && <Loading />}
+      {alert && (
+        <Alert
+          type={alert.type ?? "info"}
+          message={alert.message}
+          onClose={() => showAlert({ message: "", type: null, duration: 0 })}
+        />
+      )}
+    </>
+  );
 }
