@@ -4,7 +4,7 @@ import AuthForm from "@/components/auth/AuthForm";
 import { useRouter } from "next/navigation";
 import { AuthPostSignUp, authSignUpBody } from "@/services";
 import { useUI } from "@/context/UIContext";
-import { catchExcpetion } from "@/helper";
+import { catchExcpetion, setUser } from "@/helper";
 export default function SignUpPage() {
   const { showLoading, setLoading, showAlert } = useUI();
   const router = useRouter();
@@ -13,7 +13,7 @@ export default function SignUpPage() {
       await showLoading(async ()=> {
         const resp = await AuthPostSignUp(data);
         if(resp.token)
-          localStorage.setItem('user', JSON.stringify(resp))
+          setUser(resp)
       });
       showAlert({
         type: "success",
@@ -34,7 +34,7 @@ export default function SignUpPage() {
       title="Cadastro"
       Submit={handleSignUp}
       linkText="Já tem conta? Faça Login"
-      linkHref="/login"
+      linkHref="/signin"
       isSignUp={true}
     />
   );

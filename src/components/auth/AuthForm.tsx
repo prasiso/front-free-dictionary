@@ -19,6 +19,8 @@ export default function AuthForm({
   };
   const rulesPass: RegisterOptions = {
     validate: (value) => {
+      if(!isSignUp)
+        return
       if (value.length < 8) return "A Senha deve ter pelo menos 8 caracteres";
       if (!/[A-Z]/.test(value))
         return "A senha deve conter pelo menos uma letra maiúscula.";
