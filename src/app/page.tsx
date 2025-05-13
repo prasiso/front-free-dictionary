@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const router = useRouter()
   useEffect(()=> {
-    router.replace('/signup')
+    router.replace('/signin')
   }, [router])
   return null
 }

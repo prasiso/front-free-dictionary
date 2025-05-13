@@ -34,7 +34,7 @@ export default function SignUpPage() {
       title="Cadastro"
       Submit={handleSignUp}
       linkText="Já tem conta? Faça Login"
-      linkHref="/login"
+      linkHref="/signin"
       isSignUp={true}
     />
   );

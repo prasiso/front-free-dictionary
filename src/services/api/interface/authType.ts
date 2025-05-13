@@ -3,3 +3,8 @@ export interface authSignUpBody{
     name: string
     password: string
 }
+
+export interface authSignInBody{
+    email: string
+    password: string
+}

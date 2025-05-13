@@ -10,32 +10,40 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
   const showAlert = ({
     type,
     message,
-    duration = 5000,
+    duration = 3500,
   }: {
     type: AlertType;
     message: string;
     duration?: number;
   }) => {
     setAlert({ type, message });
-    setTimeout(() => setAlert(null), duration);
+   
+  return new Promise<void>(resolve => {
+    setTimeout(() => {
+      setAlert(null);
+      resolve();
+    }, duration);
+  });
   };
   async function showLoading(operation: () => Promise<T>): Promise<T> {
     setLoading(true);
-    const MIN_DURATION = 3000;
+    const MIN_DURATION = 1500;
     const startTime = Date.now();
-      try {
+    try {
       const result = await operation();
       return result;
     } finally {
       const elapsed = Date.now() - startTime;
       const remaining = MIN_DURATION - elapsed;
-      if (remaining > 0) await new Promise(res => setTimeout(res, remaining));
-      setLoading(false)
+      if (remaining > 0) await new Promise((res) => setTimeout(res, remaining));
+      setLoading(false);
     }
   }
 
   return (
-    <UIContext.Provider value={{ loading, showLoading, alert, setLoading, showAlert }}>
+    <UIContext.Provider
+      value={{ loading, showLoading, alert, setLoading, showAlert }}
+    >
       {children}
     </UIContext.Provider>
   );
