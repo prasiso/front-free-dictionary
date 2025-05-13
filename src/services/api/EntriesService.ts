@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib"
-import { entriesFindAllResp, entriesGetFindOneResp } from "."
+import { entriesFindAllResp,  WordEntry } from "."
 
 const router = 'entries/end/'
 export const EntriesGetEntries = async (): Promise<entriesFindAllResp> => {
@@ -7,7 +7,7 @@ export const EntriesGetEntries = async (): Promise<entriesFindAllResp> => {
     return data
 }
 
-export const EntriesGetEntrie = async (word: string): Promise<entriesGetFindOneResp> => {
-    const { data } = await apiClient.get(`${router}/${word}`,)
+export const EntriesGetEntrie = async (word: string): Promise<WordEntry> => {
+    const { data } = await apiClient.get(`${router}${word}`,)
     return data
 }
