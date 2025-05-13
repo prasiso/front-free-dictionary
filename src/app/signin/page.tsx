@@ -2,7 +2,7 @@
 
 import AuthForm from "@/components/auth/AuthForm";
 import { useUI } from "@/context/UIContext";
-import { catchExcpetion } from "@/helper";
+import { catchExcpetion, setUser } from "@/helper";
 import {
   AuthPostSignIn,
   authSignInBody,
@@ -15,7 +15,7 @@ export default function SignIn() {
     try {
       await showLoading(async () => {
         const resp = await AuthPostSignIn(data);
-        localStorage.setItem("user", JSON.stringify(resp));
+        setUser(resp)
       });
       await showAlert({
         type: "success",
