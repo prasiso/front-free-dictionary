@@ -1,8 +1,8 @@
 import { apiClient } from "@/lib"
-import { entriesFindAllResp, WordEntry } from "."
+import { WordEntry } from "."
 
 const router = 'entries/end/'
-export const EntriesGetEntries = async (query: { page: number, limit: number, search?: string }): Promise<entriesFindAllResp> => {
+export const EntriesGetEntries = async (query: { page: number, limit: number, search?: string }): Promise<any> => {
     const queryString = Object.entries(query).map(([key, value]) => {
         return `${key}=${value}`
     }).join('&')

@@ -22,7 +22,7 @@ const storeCreator: StateCreator<ListState<string[]>> = (set) => ({
                 hasNext: false,
                 entrie: state.result.entrie,
                 data: [],
-                tab:state.result.tab,
+                tab: state.result.tab,
                 limit: 200,
                 search: state.result.search,
             }

@@ -1,5 +1,5 @@
 
-export const catchExcpetion = (error: any) => {
+export const catchException = (error: any) => {
     let message = '⚠️ Ocorreu um erro inesperado. Estamos trabalhando para resolver o mais rápido possível.'
     const data = error?.response?.data?.message
     if (data && Array.isArray(data))

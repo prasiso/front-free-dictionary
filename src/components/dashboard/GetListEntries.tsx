@@ -1,9 +1,13 @@
 "use client";
 import { TabPanel, Tabs } from "@/components";
-import { ListEntrie } from "./list";
+import { ListEntrie, ListHistory } from "./list";
 import { AnimatePresence, motion } from "framer-motion";
 export function GetListEntries() {
   const tabs = [
+    {
+      label: "History",
+      type: "history",
+    },
     {
       label: "Word",
       type: "word",
@@ -12,10 +16,7 @@ export function GetListEntries() {
       label: "Favorite",
       type: "favorite",
     },
-    {
-      label: "History",
-      type: "history",
-    },
+    
   ] as { label: string; type: "word" | "history" | "favorite" }[];
 
   const changeTab = (
@@ -30,7 +31,8 @@ export function GetListEntries() {
         <Tabs changeTab={changeTab}>
           {tabs.map((tab, ind) => (
             <TabPanel key={ind} label={tab.label} type={tab.type}>
-              <ListEntrie />
+              {tab.type=== 'history' && <ListHistory />}
+              {tab.type=== 'word' && <ListEntrie />}
             </TabPanel>
           ))}
         </Tabs>

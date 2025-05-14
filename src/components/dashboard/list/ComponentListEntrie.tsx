@@ -1,6 +1,6 @@
 import { Input } from "@/components";
 import { useUI } from "@/context";
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 
 export function ComponentListEntrie({
   data,
@@ -9,56 +9,74 @@ export function ComponentListEntrie({
   onLoadMore,
   search,
   onSearchChange,
+  totalDocs = 0,
   clickWord,
 }: any) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const observer = useRef<IntersectionObserver | null>(null);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const isRequest = useRef<boolean>(false);
   const { loading } = useUI();
-  const onScroll = useCallback(() => {
-    if (!containerRef.current || !hasMore || loading) return;
 
-    const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
-    if (scrollTop + clientHeight >= scrollHeight - 10) {
-      onLoadMore();
-    }
-  }, [hasMore, onLoadMore]);
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    el?.addEventListener("scroll", onScroll);
-    return () => el.removeEventListener("scroll", onScroll);
-  }, [hasMore, onLoadMore]);
+  const lastElementRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting || loading || !hasMore || isRequest.current)
+          return;
+        isRequest.current = true;
+        onLoadMore();
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore, onLoadMore]
+  );
 
   const itemActive = (word: string) => {
     return `${
       word === wordActive
         ? "border-blue-500 text-gray-700"
-        : "boder-gray-300 text-gray-500"
-    } flex border roundend px-3 py-1 bg-white text-center justify-center items-center`;
+        : "border-gray-300 text-gray-500"
+    } flex border rounded px-3 py-1 bg-white text-center justify-center items-center cursor-pointer`;
   };
 
+  useEffect(() => {
+    isRequest.current = false;
+  }, [data]);
 
   return (
-    <div className="flex flex-col h-full ">
-      <div className="sticky top-0 bg-white z-10 border-b border-gray-300 p-2">
-        <Input
-          label="Search"
-          name="search"
-          value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
-        ></Input>
+    <div className="flex flex-col h-full">
+      <div className="sticky top-0  bg-white z-10 border-b items-center justify-between border-gray-300 p-2 flex flex-wrap ">
+        <div className="md:w-1/2 sm:max-w-sm md:max-w-full">
+          <Input
+            label="Search"
+            name="search"
+            value={search}
+            onChange={(e) => onSearchChange(e.target.value)}
+          />
+        </div>
+        <span>Total Found: {totalDocs}</span>
       </div>
-      <div ref={containerRef} className="flex-1 overflow-auto">
-        <ul className=" grid sm:grid-cols-3 md:grid-cols-5 gap-4 grid-flow-row auto-rows-[100px] h-[500px] font-sans text-base  p-2">
-          {data?.map((word: string, i: number) => (
+
+      <div className="flex-1 overflow-auto">
+        <ul className="grid sm:grid-cols-3 md:grid-cols-5 gap-4 grid-flow-row auto-rows-[100px] h-[500px] font-sans text-base p-2">
+          {data?.map((word: any, i: number) => (
             <li
+              ref={data.length === i + 1 ? lastElementRef : null}
               key={i}
-              className={itemActive(word)}
-              onClick={() => clickWord(word)}
+              className={itemActive(word.word)}
+              onClick={() => clickWord(word.word)}
             >
-              {word}
+              <div className="flex flex-col items-center">
+                <span>{word.word}</span>
+                {word.added && <span className="text-xs text-gray-400 mt-1">{word.added}</span>}
+              </div>
             </li>
           ))}
         </ul>
+
+        <div ref={sentinelRef} className="h-1" />
       </div>
     </div>
   );

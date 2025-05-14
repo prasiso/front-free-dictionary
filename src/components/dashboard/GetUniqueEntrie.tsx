@@ -1,6 +1,6 @@
 "use client";
 import { useUI } from "@/context/UIContext";
-import { catchExcpetion } from "@/helper";
+import { catchException } from "@/helper";
 import {
   EntriesGetEntrie,
   EntriesPostFav,
@@ -40,7 +40,7 @@ export function GetUniqueEntrie() {
     } catch (error) {
       setLoading(false);
       await closeGetUnique();
-      const message = catchExcpetion(error);
+      const message = catchException(error);
       await showAlert({ type: "error", message });
     } finally {
     }
@@ -66,7 +66,7 @@ export function GetUniqueEntrie() {
       body.fav = fav;
       setBody(body);
     } catch (error) {
-      const message = catchExcpetion(error);
+      const message = catchException(error);
       showAlert({ type: "error", message });
     } finally {
       setLoading(false);
@@ -81,7 +81,7 @@ export function GetUniqueEntrie() {
   }
   useEffect(() => {
     HandleSearchEntrie();
-  }, [entrie]);
+  }, [query.get("entrie")]);
 
   return (
     <>
