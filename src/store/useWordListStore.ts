@@ -6,7 +6,7 @@ const storeCreator: StateCreator<ListState<string[]>> = (set) => ({
         page: 1,
         entrie: '',
         data: [],
-        limit: 10,
+        limit: 50,
         search: '',
         tab: 'word',
         totalDocs: 0,
@@ -38,7 +38,7 @@ const storeCreator: StateCreator<ListState<string[]>> = (set) => ({
             totalDocs: 0,
             entrie: '',
             data: [],
-            limit: 10,
+            limit: 50,
             search: '',
         },
     })
