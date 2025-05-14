@@ -14,3 +14,11 @@ export const EntriesGetEntrie = async (word: string): Promise<WordEntry> => {
     const { data } = await apiClient.get(`${router}${word}`,)
     return data
 }
+
+export const EntriesPostFav = async (word: string): Promise<void> => {
+    await apiClient.post(`${router}${word}/favorite`)
+}
+
+export const EntriesPostUnFav = async (word: string): Promise<void> => {
+    await apiClient.delete(`${router}${word}/unfavorite`)
+}

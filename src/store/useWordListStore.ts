@@ -8,6 +8,7 @@ const storeCreator: StateCreator<ListState<string[]>> = (set) => ({
         data: [],
         limit: 10,
         search: '',
+        tab: '',
         hasPrev: false,
         hasNext: false
     },
@@ -21,6 +22,7 @@ const storeCreator: StateCreator<ListState<string[]>> = (set) => ({
                 hasNext: false,
                 entrie: state.result.entrie,
                 data: [],
+                tab:state.result.tab,
                 limit: 200,
                 search: state.result.search,
             }
@@ -31,6 +33,7 @@ const storeCreator: StateCreator<ListState<string[]>> = (set) => ({
             page: 1,
             hasPrev: false,
             hasNext: false,
+            tab: 'word',
             entrie: '',
             data: [],
             limit: 10,

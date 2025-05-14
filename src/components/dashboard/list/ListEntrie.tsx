@@ -14,12 +14,12 @@ export function ListEntrie() {
   const time = useRef<NodeJS.Timeout | null>(null);
   const searchParms = useSearchParams();
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     const page = searchParms.get("page");
     const limit = searchParms.get("limit");
     const search = searchParms.get("search");
     const entrie = searchParms.get("entrie");
-    result.entrie = String(entrie);
+    result.entrie = String(entrie || '');
     result.limit = Number(limit) ?? 40;
     result.page = Number(page) ?? 1;
     result.search = String(search);
@@ -69,10 +69,12 @@ export function ListEntrie() {
         search,
       });
       const data = [...result.data, ...res.results];
+      if (!data.length) showAlert({ type: "info", message: "Not found list of word" });
+
       setResult({
         data,
         hasNext: res.hasNext,
-        hasPrev: res.hasPrev
+        hasPrev: res.hasPrev,
       });
       result.data = data;
       result.hasNext = res.hasNext;
@@ -81,8 +83,7 @@ export function ListEntrie() {
       const message = catchExcpetion(error);
       showAlert({ type: "error", message });
     } finally {
-      setLoading(false)
-
+      setLoading(false);
     }
   };
 
@@ -108,7 +109,7 @@ export function ListEntrie() {
     }
     time.current = setTimeout(() => {
       setLoading(true);
-      resetSearch()
+      resetSearch();
       let queryParams = `search=${inp}`;
       searchParms.forEach((value, key) => {
         if (key === "search") return;

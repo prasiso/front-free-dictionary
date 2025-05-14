@@ -1,13 +1,19 @@
 "use client";
 import { useUI } from "@/context/UIContext";
 import { catchExcpetion } from "@/helper";
-import { EntriesGetEntrie, WordEntry } from "@/services";
+import {
+  EntriesGetEntrie,
+  EntriesPostFav,
+  EntriesPostUnFav,
+  WordEntry,
+} from "@/services";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { GetRowAudio } from "./unique/GetRowAudio";
 import { IPropsRowAudio } from "@/types";
 import { AnimatePresence, motion } from "framer-motion";
 import { useWordListStore } from "@/store";
+import { FaStar } from "react-icons/fa";
+import { ButtonNextAndBack, GetRowAudio } from "./unique";
 
 export function GetUniqueEntrie() {
   const { showAlert, showLoading, setLoading } = useUI();
@@ -22,9 +28,9 @@ export function GetUniqueEntrie() {
       await showLoading(async () => {
         if (!entrie) {
           setBody(undefined);
-          setResult({entrie: ''})
-          result.entrie = ''
-          
+          setResult({ entrie: "" });
+          result.entrie = "";
+
           return;
         }
         const resp = await EntriesGetEntrie(String(entrie));
@@ -42,8 +48,29 @@ export function GetUniqueEntrie() {
   function closeGetUnique() {
     setBody(undefined);
     setResult({
-      entrie: ''
-    })
+      entrie: "",
+    });
+  }
+
+  async function setFav() {
+    if (!body) return;
+    const fav = !!!body?.fav;
+    try {
+      await showLoading(() =>
+        fav ? EntriesPostFav(String(body.word)) : EntriesPostUnFav(body.word)
+      );
+      const message = fav
+        ? "Palavra Favoritada com sucesso!"
+        : "Palavra Desfavoritada com sucesso!";
+      showAlert({ type: "success", message });
+      body.fav = fav;
+      setBody(body);
+    } catch (error) {
+      const message = catchExcpetion(error);
+      showAlert({ type: "error", message });
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function playAudio(row: IPropsRowAudio) {
@@ -68,30 +95,42 @@ export function GetUniqueEntrie() {
             transition={{ duration: 0.3 }}
             className=" w-full lg:max-w-sm  bg-purple-50 rounded-lg p-5 shadow-sm relative"
           >
-            <button
-              aria-label="Close"
-              onClick={closeGetUnique}
-              className="absolute top-4 left-4 text-gray-600 hover:text-gray-900 focus:outline-none"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
+            <div className="flex flex-nowrap justify-around items-center mb-4">
+              <button
+                aria-label="Close"
+                onClick={closeGetUnique}
+                className=" top-4 left-4 text-gray-600 hover:text-gray-900 focus:outline-none"
               >
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
 
-            <h1 className="text-center text-2xl font-semibold text-black mb-6">
-              {body.word} {body.phonetic && <span> - {body.phonetic} </span>}
-            </h1>
-
+              <h1 className="text-center text-2xl font-semibold text-black ">
+                {body.word} {body.phonetic && <span> - {body.phonetic} </span>}
+              </h1>
+              <button
+                aria-label="Favorite"
+                onClick={() => setFav()}
+                className={`focus:outline-none ${
+                  body.fav
+                    ? "text-yellow-400"
+                    : "text-gray-400 hover:text-yellow-400"
+                }`}
+              >
+                <FaStar className="text-lg" />
+              </button>
+            </div>
             <ul className="list-disc list-inside overflow-y-auto space-y-4 mb-6 max-h-65">
               {body.audio.map((aud, ind) => (
                 <GetRowAudio
@@ -114,15 +153,20 @@ export function GetUniqueEntrie() {
                 ))}
               </ul>
             </div>
-
-            <div className="mt-6 flex justify-start space-x-3">
-              <button className="bg-gray-300 text-black px-4 py-2 rounded-md text-sm hover:bg-gray-400 transition">
-                Voltar
-              </button>
-              <button className="bg-purple-700 text-white px-5 py-2 rounded-md text-sm hover:bg-purple-800 transition">
-                Próximo
-              </button>
-            </div>
+            <ButtonNextAndBack />
+            {body.history?.created_at && (
+              <div className="mt-4 pt-4 border-t border-gray-300 text-xs text-gray-600">
+                Last visit:{" "}
+                {new Date(body.history.created_at).toLocaleDateString("pt-br", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                })}
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

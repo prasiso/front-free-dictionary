@@ -36,6 +36,7 @@ export function ComponentListEntrie({
     } flex border roundend px-3 py-1 bg-white text-center justify-center items-center`;
   };
 
+
   return (
     <div className="flex flex-col h-full ">
       <div className="sticky top-0 bg-white z-10 border-b border-gray-300 p-2">

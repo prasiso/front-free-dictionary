@@ -6,6 +6,7 @@ export type Result<D> = {
     data: D
     search: string
     entrie: string
+    tab: string
 }
 
 export type ListState<D> = {
