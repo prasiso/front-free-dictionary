@@ -17,14 +17,6 @@ export function ListEntrie({ className }: { className?: string }) {
   const searchParms = useSearchParams();
   const searchString = searchParms.get("search") ?? "";
   const entrie = searchParms.get("entrie");
-  useEffect(() => {
-    setLoading(true);
-    const page = searchParms.get("page");
-    const limit = searchParms.get("limit");
-    const search = searchParms.get("search");
-    result.entrie = String(entrie || "");
-    setResult({ search : search ?? "", entrie: String(entrie || ""), limit:Number(limit) ?? 50, page: Number(page) ?? 1   });
-  }, []);
   function UpdateQuery() {
     const query = new URLSearchParams();
     query.set("page", String(result.page));
