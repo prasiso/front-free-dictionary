@@ -1,6 +1,7 @@
 import { AuthResp } from "@/services"
 
-export function getUser(): AuthResp | null {
+export function getUser(): AuthResp | null  {
+    if(typeof window == undefined) return null
     const data = localStorage.getItem('user')
     return data ? JSON.parse(data) : null
 }
