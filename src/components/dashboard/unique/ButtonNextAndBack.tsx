@@ -91,14 +91,16 @@ export function ButtonNextAndBack() {
       <button
         onClick={onBack}
         disabled={hasPrev}
-        className="disabled:cursor-not-allowed bg-gray-300 text-black px-4 py-2 rounded-md text-sm hover:bg-gray-400 transition"
+        className="disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500
+ bg-gray-300 text-black px-4 py-2 rounded-md text-sm hover:bg-gray-400 transition"
       >
         Back
       </button>
       <button
         onClick={onNext}
         disabled={hasNext}
-        className="disabled:cursor-not-allowed bg-purple-700 text-white px-5 py-2 rounded-md text-sm hover:bg-purple-800 transition"
+        className="bg-purple-700 text-white px-5 py-2 rounded-md text-sm hover:bg-purple-800 transition
+         disabled:bg-purple-300 disabled:text-white disabled:cursor-not-allowed"
       >
         Next
       </button>
