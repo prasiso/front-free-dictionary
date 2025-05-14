@@ -12,7 +12,7 @@ export function ListEntrie({ className }: { className?: string }) {
   const resetSearch = useWordListStore((state) => state.resetSearch);
   const router = useRouter();
   const fetchRequest = useRef<boolean>(false);
-  const { showAlert, showLoading, setLoading } = useUI();
+  const { showAlert, setLoading } = useUI();
   const time = useRef<NodeJS.Timeout | null>(null);
   const searchParms = useSearchParams();
   const searchString = searchParms.get("search") ?? "";
@@ -23,10 +23,7 @@ export function ListEntrie({ className }: { className?: string }) {
     const limit = searchParms.get("limit");
     const search = searchParms.get("search");
     result.entrie = String(entrie || "");
-    result.limit = Number(limit) ?? 40;
-    result.page = Number(page) ?? 1;
-    result.search = String(search);
-    setResult(result);
+    setResult({ search : search ?? "", entrie: String(entrie || ""), limit:Number(limit) ?? 50, page: Number(page) ?? 1   });
   }, []);
   function UpdateQuery() {
     const query = new URLSearchParams();
@@ -34,7 +31,7 @@ export function ListEntrie({ className }: { className?: string }) {
     query.set("limit", String(result.limit));
     query.set("search", result.search ?? "");
     query.set("entrie", result.entrie ?? "");
-    router.push(`?${query.toString()}`, { scroll: false, shallow: true });
+    router.push(`?${query.toString()}`, { scroll: false });
   }
 
   useEffect(() => {
@@ -103,13 +100,12 @@ export function ListEntrie({ className }: { className?: string }) {
     if (!searchString) return;
     setResult({ search: searchString });
   }, [searchString]);
-
-  useEffect(() => {
-    UpdateQuery();
-  }, [result.page]);
-  useUpdateState(
+useUpdateState(
     (init) => {
-      const limit = Number(searchParms.get("limit") || "10");
+      if (init && result.tab == "word") {
+        resetSearch();
+      }
+      const limit = Number(searchParms.get("limit") || "50");
       const page = Number(searchParms.get("page") || "1");
       const search = searchString;
       if (
@@ -130,6 +126,10 @@ export function ListEntrie({ className }: { className?: string }) {
     [searchParms.get("page"), searchString],
     true
   );
+  useEffect(() => {
+    UpdateQuery();
+  }, [result.page]);
+  
 
   function actionSearch(inp: string) {
     setResult({ search: inp });
@@ -148,7 +148,7 @@ export function ListEntrie({ className }: { className?: string }) {
     }, 1500);
   }
   async function LoadMore() {
-    const limit = Number(searchParms.get("limit") || "10");
+    const limit = Number(searchParms.get("limit") || "50");
     const page = Number(searchParms.get("page") || "1") + 1;
     await setResult({ page, limit });
   }
