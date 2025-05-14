@@ -56,7 +56,7 @@ export function ComponentListEntrie({
             onChange={(e) => onSearchChange(e.target.value)}
           />
         </div>
-        <span className="text-blue-500 font-bold">Total Found: {totalDocs}</span>
+        <span className="text-blue-500 font-bold">Total Found: {Number(totalDocs).toLocaleString('pt-br')}</span>
       </div>
 
       <div className="flex-1 overflow-auto">
