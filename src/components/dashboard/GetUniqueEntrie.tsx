@@ -9,7 +9,7 @@ import { IPropsRowAudio } from "@/types";
 import { AnimatePresence, motion } from "framer-motion";
 
 export function GetUniqueEntrie() {
-  const { showAlert, showLoading } = useUI();
+  const { showAlert, showLoading, setLoading } = useUI();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [body, setBody] = useState<WordEntry | undefined>(undefined);
   const query = useSearchParams();
@@ -17,12 +17,17 @@ export function GetUniqueEntrie() {
   async function HandleSearchEntrie() {
     try {
       await showLoading(async () => {
-        if (!entrie) setBody(undefined);
+        if (!entrie) {
+          setBody(undefined);
+          return;
+        }
         const resp = await EntriesGetEntrie(String(entrie));
         resp.audio = resp.audio.sort((a, b) => (!a.audio && b.audio ? 1 : -1));
         setBody(resp);
       });
     } catch (error) {
+      setLoading(false);
+      await closeGetUnique();
       const message = catchExcpetion(error);
       await showAlert({ type: "error", message });
     } finally {
@@ -47,9 +52,11 @@ export function GetUniqueEntrie() {
       <AnimatePresence>
         {body && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            layout
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
             className="max-w-sm w-full bg-purple-50 rounded-lg p-5 shadow-sm relative"
           >
             <button
