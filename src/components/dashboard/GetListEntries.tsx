@@ -41,7 +41,7 @@ export function GetListEntries() {
       <motion.div
         layout
         className={
-          " flex w-full p-4 justify-center aligm-center  lg:block" +
+          " flex w-full p-4 justify-center aligm-center  lg:block " +
           (searchParms.get("entrie") ? "hidden" : "")
         }
       >
