@@ -34,7 +34,7 @@ export function ListEntrie({ className }: { className?: string }) {
     query.set("limit", String(result.limit));
     query.set("search", result.search ?? "");
     query.set("entrie", result.entrie ?? "");
-    router.push(`?${query.toString()}`, { scroll: false });
+    router.push(`?${query.toString()}`, { scroll: false, shallow: true });
   }
   async function clickWord(entrie: string) {
     if (result.entrie === entrie) {
@@ -51,7 +51,6 @@ export function ListEntrie({ className }: { className?: string }) {
     result.entrie = entrie;
     UpdateQuery();
   }
-
   const fetchData = async ({
     limit,
     page,
@@ -103,10 +102,19 @@ export function ListEntrie({ className }: { className?: string }) {
     UpdateQuery();
   }, [result.page]);
   useUpdateState(
-    () => {
+    (init) => {
       const limit = Number(searchParms.get("limit") || "10");
       const page = Number(searchParms.get("page") || "1");
       const search = searchString;
+      if (
+        result.tab !== "word" ||
+        (!init &&
+        limit !== result.limit ||
+        page !== result.page ||
+        search !== result.search)
+      )
+        return;
+
       setResult({
         limit,
         page,

@@ -43,7 +43,7 @@ export function ListHistory({ className }: { className?: string }) {
       fetchRequest.current = true;
       const res = await GetUserHistory({
         page,
-        limit: 200,
+        limit: 50,
         search,
       });
       const words = res.results.map((item: any) => ({

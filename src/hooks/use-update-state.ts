@@ -5,12 +5,15 @@ export function useUpdateState(back, dep, firstRender = false) {
 
   useEffect(() => {
     if (isFirstRender.current) {
+      if (firstRender) {
+        back(isFirstRender.current);
+        isFirstRender.current = false;
+      }
       isFirstRender.current = false;
-      if (!firstRender)
-        return;
+      return;
     }
+    back(isFirstRender.current);
 
-    back();
   }, dep);
 }
 

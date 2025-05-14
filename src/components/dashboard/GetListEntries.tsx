@@ -7,7 +7,7 @@ import { useWordListStore } from "@/store";
 import { useEffect } from "react";
 export function GetListEntries() {
   const searchParms = useSearchParams();
-  const setResult = useWordListStore((set)=> set.setResult)
+  const setResult = useWordListStore((set) => set.setResult);
   const tabs = [
     {
       label: "Word",
@@ -28,29 +28,27 @@ export function GetListEntries() {
     tab: { label: string; type: "word" | "history" | "favorite" }
   ) => {
     setResult({
-      tab: tab.type
-    })
+      tab: tab.type,
+    });
   };
-  useEffect(()=> {
+  useEffect(() => {
     setResult({
-      tab: 'word'
-    })
-  }, [])
+      tab: "word",
+    });
+  }, []);
   return (
     <AnimatePresence>
       <motion.div
         layout
         className={
-         " flex w-full p-4 justify-center aligm-center  lg:block" +
-           (searchParms.get("entrie")
-            ? "hidden"
-            : "" )
+          " flex w-full p-4 justify-center aligm-center  lg:block" +
+          (searchParms.get("entrie") ? "hidden" : "")
         }
       >
         <Tabs changeTab={changeTab}>
           {tabs.map((tab, ind) => (
             <TabPanel key={ind} label={tab.label} type={tab.type}>
-              {tab.type === "word" && <ListEntrie />}
+              <ListEntrie className={tab.type !== "word" ? "hidden" : ""} />
               {tab.type === "history" && <ListHistory />}
               {tab.type === "favorite" && <ListFavorite />}
             </TabPanel>

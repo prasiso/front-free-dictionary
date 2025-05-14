@@ -43,7 +43,7 @@ export function ListFavorite({ className }: { className?: string }) {
       fetchRequest.current = true;
       const res = await GetUserFavorite({
         page,
-        limit: 200,
+        limit: 50,
         search,
       });
       const words = res.results.map((item: any) => ({
