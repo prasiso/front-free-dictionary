@@ -7,7 +7,7 @@ import {
   EntriesPostUnFav,
   WordEntry,
 } from "@/services";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { IPropsRowAudio } from "@/types";
 import { AnimatePresence, motion } from "framer-motion";
@@ -18,6 +18,7 @@ import { ButtonNextAndBack, GetRowAudio } from "./unique";
 export function GetUniqueEntrie() {
   const { showAlert, showLoading, setLoading } = useUI();
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const router = useRouter();
   const [body, setBody] = useState<WordEntry | undefined>(undefined);
   const query = useSearchParams();
   const entrie = query.get("entrie");
@@ -50,6 +51,9 @@ export function GetUniqueEntrie() {
     setResult({
       entrie: "",
     });
+    const params = new URLSearchParams(query.toString());
+    params.set("entrie", "");
+    router.push(`?${params.toString()}`)
   }
 
   async function setFav() {

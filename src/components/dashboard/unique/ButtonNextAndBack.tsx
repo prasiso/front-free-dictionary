@@ -1,36 +1,56 @@
-import { useWordListStore } from "@/store/useWordListStore";
+"use client";
+import { useWordListStore, useHistoryListStore } from "@/store";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-export function ButtonNextAndBack({ entrie }: { entrie: string }) {
+export function ButtonNextAndBack() {
+  const query = useSearchParams();
   const result = useWordListStore((state) => state.result);
-  const setResult = useWordListStore((state) => state.setResult);
+  const dataHistory = useHistoryListStore((state) => state.data);
+  const entrie = query.get("entrie");
   const [hasPrev, setHasPrev] = useState(false);
   const [hasNext, setHasNext] = useState(false);
+  const router = useRouter();
+
+  function updateEntrie(entries) {
+    const params = new URLSearchParams(query.toString());
+    params.set("entrie", entries);
+    router.push(`?${params.toString()}`);
+  }
 
   useEffect(() => {
     validNextOrBack();
-  }, [result.entrie]);
+  }, [entrie]);
   function validNextOrBack() {
     const { ind, data } = foundEntrie();
     if (ind === -1) {
       setHasNext(true);
       setHasPrev(true);
     }
-    if(!data[ind+1]){
-        setHasNext(true)
+    if (!data[ind + 1]) {
+      setHasNext(true);
     }
-    if(!data[ind-1]){
-        setHasPrev(true)
+    if (!data[ind - 1]) {
+      setHasPrev(true);
     }
   }
 
   function foundEntrie() {
     const data = whichStoreToUse();
-    const ind = data.findIndex((ind) => ind === result.entrie);
+    const ind = data.findIndex((ind) => ind.word === entrie);
     return { ind, data };
   }
 
   function whichStoreToUse() {
-    // APOS INSERÇÃO DOS OUTROS TIPOS HISTORY E FAVORITE
+    const notRepat = (data) => {
+      return data.filter((value, ind, array) => {
+        const index = array.findIndex((i) => i.word === value.word);
+        return index == ind;
+      });
+    };
+    if (result.tab === "history") {
+      return notRepat(dataHistory);
+    }
+      
     return result.data;
   }
 
@@ -44,8 +64,7 @@ export function ButtonNextAndBack({ entrie }: { entrie: string }) {
     if (!newEntrie) {
       return;
     }
-    setResult({ entrie: newEntrie });
-    result.entrie = newEntrie;
+    updateEntrie(newEntrie?.word);
   }
 
   function onBack() {

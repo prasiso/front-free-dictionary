@@ -5,12 +5,14 @@ import { ComponentListEntrie } from "./ComponentListEntrie";
 import { useUI } from "@/context";
 import { catchException, format_date } from "@/helper";
 import { useUpdateState } from "@/hooks";
+import { useHistoryListStore } from "@/store";
 
 export function ListHistory() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [totalDocs, setTotalDocs] = useState(0);
-  const [data, setData] = useState<string[]>([]);
+  const data = useHistoryListStore((set)=> set.data)
+  const setData = useHistoryListStore((set)=> set.setData)
   const [hasMore, setHasMore] = useState(false);
   const [entrie, setEntrie] = useState("");
   const [refresh, setRefreshTrigger] = useState(0);
@@ -43,7 +45,7 @@ export function ListHistory() {
       });
       const words = res.results.map((item: any) => ({
         word: item.word,
-        added: format_date(item.added)
+        added: format_date(item.added),
       }));
       const body = page === 1 ? [] : data;
       const updatedData = body.concat(words);
@@ -80,6 +82,11 @@ export function ListHistory() {
     UpdateQuery();
   }, [entrie]);
 
+  useEffect(() => {
+    setEntrie(String(searchParams.get("entrie") ?? ""));
+    fetchData()
+  }, [searchParams.get("entrie")]);
+
   function actionSearch(inp: string) {
     setSearch(inp);
   }
@@ -92,7 +99,7 @@ export function ListHistory() {
     <div>
       <ComponentListEntrie
         data={data}
-        totalDocs= {totalDocs}
+        totalDocs={totalDocs}
         hasMore={hasMore}
         onLoadMore={LoadMore}
         search={search}

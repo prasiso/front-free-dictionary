@@ -36,8 +36,8 @@ export function ComponentListEntrie({
   const itemActive = (word: string) => {
     return `${
       word === wordActive
-        ? "border-blue-500 text-gray-700"
-        : "border-gray-300 text-gray-500"
+        ? "border-blue-500 text-black"
+        : "border-gray-300 text-gray-700"
     } flex border rounded px-3 py-1 bg-white text-center justify-center items-center cursor-pointer`;
   };
 
@@ -56,7 +56,7 @@ export function ComponentListEntrie({
             onChange={(e) => onSearchChange(e.target.value)}
           />
         </div>
-        <span>Total Found: {totalDocs}</span>
+        <span className="text-blue-500 font-bold">Total Found: {totalDocs}</span>
       </div>
 
       <div className="flex-1 overflow-auto">
@@ -70,7 +70,7 @@ export function ComponentListEntrie({
             >
               <div className="flex flex-col items-center">
                 <span>{word.word}</span>
-                {word.added && <span className="text-xs text-gray-400 mt-1">{word.added}</span>}
+                {word.added && <span className="text-xs text-blue-500 mt-1">{word.added}</span>}
               </div>
             </li>
           ))}

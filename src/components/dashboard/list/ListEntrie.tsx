@@ -49,8 +49,6 @@ export function ListEntrie() {
     UpdateQuery();
   }
 
-  useEffect(() => {}, [result.page, result.limit, result.entrie]);
-
   const fetchData = async ({
     limit,
     page,
@@ -66,7 +64,10 @@ export function ListEntrie() {
         limit,
         search,
       });
-      const data = [...result.data, ...res.results];
+      const data = [
+        ...result.data,
+        ...res.results.map((res) => ({ word: res })),
+      ];
       if (!data.length)
         showAlert({ type: "info", message: "Not found list of word" });
 
@@ -74,7 +75,7 @@ export function ListEntrie() {
         data,
         hasNext: res.hasNext,
         hasPrev: res.hasPrev,
-        totalDocs: res.totalDocs
+        totalDocs: res.totalDocs,
       });
       result.data = data;
       result.hasNext = res.hasNext;
@@ -131,7 +132,7 @@ export function ListEntrie() {
   return (
     <ComponentListEntrie
       data={result.data}
-      totalDocs= {result.totalDocs}
+      totalDocs={result.totalDocs}
       hasMore={result.hasNext}
       onLoadMore={LoadMore}
       search={result.search}
