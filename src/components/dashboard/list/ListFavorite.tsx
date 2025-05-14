@@ -26,7 +26,7 @@ export function ListFavorite({ className }: { className?: string }) {
 
   function UpdateQuery() {
     const current = query.get("entrie") ?? "";
-    if (current === entrie) return;
+    if (current === entrie || !entrie) return;
     const params = new URLSearchParams(query.toString());
 
     params.set("entrie", entrie);
@@ -67,6 +67,9 @@ export function ListFavorite({ className }: { className?: string }) {
       setLoading(false);
     }
   };
+  useUpdateState(() => {
+    setEntrie(query.get("entrie") ?? "");
+  }, [query.get("entrie")]);
 
   useUpdateState(() => {
     fetchData();
@@ -76,12 +79,12 @@ export function ListFavorite({ className }: { className?: string }) {
     if (!didSearch.current) return;
     if (time.current) clearTimeout(time.current);
     time.current = setTimeout(() => {
-      didSearch.current = false
+      didSearch.current = false;
       setLoading(true);
       setPage(1);
       setData([]);
       setRefreshTrigger((prev) => prev + 1);
-      didSearch.current = true
+      didSearch.current = true;
     }, 1500);
   }, [search]);
 
@@ -90,18 +93,19 @@ export function ListFavorite({ className }: { className?: string }) {
   }, [entrie]);
 
   function actionSearch(inp: string) {
-    didSearch.current = true
+    didSearch.current = true;
     setSearch(inp);
   }
 
   function LoadMore() {
     setPage((page) => page + 1);
   }
-
+  useUpdateState(() => {
+    setEntrie(query.get("entrie") ?? "");
+  }, [query.get("entrie")]);
   return (
     <div className={className}>
       <ComponentListEntrie
-
         data={data}
         totalDocs={totalDocs}
         hasMore={hasMore}
