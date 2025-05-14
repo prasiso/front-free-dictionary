@@ -16,12 +16,12 @@ export function ListEntrie({ className }: { className?: string }) {
   const time = useRef<NodeJS.Timeout | null>(null);
   const searchParms = useSearchParams();
   const searchString = searchParms.get("search") ?? "";
+  const entrie = searchParms.get("entrie");
   useEffect(() => {
     setLoading(true);
     const page = searchParms.get("page");
     const limit = searchParms.get("limit");
     const search = searchParms.get("search");
-    const entrie = searchParms.get("entrie");
     result.entrie = String(entrie || "");
     result.limit = Number(limit) ?? 40;
     result.page = Number(page) ?? 1;
@@ -36,6 +36,12 @@ export function ListEntrie({ className }: { className?: string }) {
     query.set("entrie", result.entrie ?? "");
     router.push(`?${query.toString()}`, { scroll: false, shallow: true });
   }
+
+  useEffect(() => {
+    setResult({
+      entrie: entrie ?? "",
+    });
+  }, [entrie]);
   async function clickWord(entrie: string) {
     if (result.entrie === entrie) {
       result.entrie = "";
@@ -108,10 +114,9 @@ export function ListEntrie({ className }: { className?: string }) {
       const search = searchString;
       if (
         result.tab !== "word" ||
-        (!init &&
-        limit !== result.limit ||
+        (!init && limit !== result.limit) ||
         page !== result.page ||
-        search !== result.search)
+        search !== result.search
       )
         return;
 
