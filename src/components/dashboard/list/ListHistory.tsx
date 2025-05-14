@@ -7,29 +7,30 @@ import { catchException, format_date } from "@/helper";
 import { useUpdateState } from "@/hooks";
 import { useHistoryListStore } from "@/store";
 
-export function ListHistory() {
+export function ListHistory({ className }: { className?: string }) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [totalDocs, setTotalDocs] = useState(0);
-  const data = useHistoryListStore((set)=> set.data)
-  const setData = useHistoryListStore((set)=> set.setData)
+  const data = useHistoryListStore((set) => set.data);
+  const setData = useHistoryListStore((set) => set.setData);
   const [hasMore, setHasMore] = useState(false);
   const [entrie, setEntrie] = useState("");
   const [refresh, setRefreshTrigger] = useState(0);
 
   const time = useRef<NodeJS.Timeout | null>(null);
-
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const query = useSearchParams();
+  const didSearch = useRef(false);
+  const fetchRequest = useRef<boolean>(false);
   const { showAlert, setLoading } = useUI();
 
   function UpdateQuery() {
-    let query = `entrie=${entrie}`;
-    searchParams.forEach((value, key) => {
-      if (key === "entrie") return;
-      query += `&${key}=${value}`;
-    });
-    router.push(`?${query}`, { scroll: false });
+    const current = query.get("entrie") ?? "";
+    if (current === entrie) return;
+    const params = new URLSearchParams(query.toString());
+
+    params.set("entrie", entrie);
+    router.push(`?${params.toString()}`);
   }
 
   async function clickWord(word: string) {
@@ -38,6 +39,8 @@ export function ListHistory() {
 
   const fetchData = async () => {
     try {
+      if (fetchRequest.current) return;
+      fetchRequest.current = true;
       const res = await GetUserHistory({
         page,
         limit: 200,
@@ -60,21 +63,25 @@ export function ListHistory() {
       const message = catchException(error);
       showAlert({ type: "error", message });
     } finally {
+      fetchRequest.current = false;
       setLoading(false);
     }
   };
 
-  useEffect(() => {
+  useUpdateState(() => {
     fetchData();
-  }, [page, refresh]);
+  }, [page, refresh, query.get("entrie")]);
 
   useUpdateState(() => {
+    if (!didSearch.current) return;
     if (time.current) clearTimeout(time.current);
     time.current = setTimeout(() => {
+      didSearch.current = false
       setLoading(true);
       setPage(1);
       setData([]);
       setRefreshTrigger((prev) => prev + 1);
+      didSearch.current = true
     }, 1500);
   }, [search]);
 
@@ -82,12 +89,8 @@ export function ListHistory() {
     UpdateQuery();
   }, [entrie]);
 
-  useEffect(() => {
-    setEntrie(String(searchParams.get("entrie") ?? ""));
-    fetchData()
-  }, [searchParams.get("entrie")]);
-
   function actionSearch(inp: string) {
+    didSearch.current = true
     setSearch(inp);
   }
 
@@ -96,8 +99,9 @@ export function ListHistory() {
   }
 
   return (
-    <div>
+    <div className={className}>
       <ComponentListEntrie
+
         data={data}
         totalDocs={totalDocs}
         hasMore={hasMore}

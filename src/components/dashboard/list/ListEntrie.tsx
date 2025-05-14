@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import { ComponentListEntrie } from "./ComponentListEntrie";
 import { useUI } from "@/context";
 import { catchException } from "@/helper";
-export function ListEntrie() {
+export function ListEntrie({ className }: { className?: string }) {
   const result = useWordListStore((state) => state.result);
   const setResult = useWordListStore((state) => state.setResult);
   const resetSearch = useWordListStore((state) => state.resetSearch);
@@ -13,6 +13,7 @@ export function ListEntrie() {
   const { showAlert, showLoading, setLoading } = useUI();
   const time = useRef<NodeJS.Timeout | null>(null);
   const searchParms = useSearchParams();
+  const searchString = searchParms.get("search") ?? ""
   useEffect(() => {
     setLoading(true);
     const page = searchParms.get("page");
@@ -89,10 +90,10 @@ export function ListEntrie() {
   };
 
   useEffect(() => {
-    const searchString = searchParms.get("search") ?? "";
+    ;
     if (!searchString) return;
     setResult({ search: searchString });
-  }, [searchParms.get("search")]);
+  }, [searchString]);
 
   useEffect(() => {
     UpdateQuery();
@@ -100,14 +101,14 @@ export function ListEntrie() {
   useEffect(() => {
     const limit = Number(searchParms.get("limit") || "10");
     const page = Number(searchParms.get("page") || "1");
-    const search = searchParms.get("search") || "";
+    const search = searchString;
     setResult({
       limit,
       page,
       search,
     });
     fetchData({ limit, page, search });
-  }, [searchParms.get("page"), searchParms.get("search")]);
+  }, [searchParms.get("page"), searchString]);
   function actionSearch(inp: string) {
     setResult({ search: inp });
     if (time.current) {
@@ -130,15 +131,17 @@ export function ListEntrie() {
     await setResult({ page, limit });
   }
   return (
-    <ComponentListEntrie
-      data={result.data}
-      totalDocs={result.totalDocs}
-      hasMore={result.hasNext}
-      onLoadMore={LoadMore}
-      search={result.search}
-      wordActive={result.entrie}
-      onSearchChange={actionSearch}
-      clickWord={clickWord}
-    />
+    <div className={className}>
+      <ComponentListEntrie
+        data={result.data}
+        totalDocs={result.totalDocs}
+        hasMore={result.hasNext}
+        onLoadMore={LoadMore}
+        search={result.search}
+        wordActive={result.entrie}
+        onSearchChange={actionSearch}
+        clickWord={clickWord}
+      />
+    </div>
   );
 }

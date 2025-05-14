@@ -41,9 +41,10 @@ export function GetListEntries() {
       <motion.div
         layout
         className={
-          searchParms.get("entrie")
+         " flex w-full p-4 justify-center aligm-center  lg:block" +
+           (searchParms.get("entrie")
             ? "hidden"
-            : "" + (" flex w-full p-4 justify-center aligm-center  lg:block")
+            : "" )
         }
       >
         <Tabs changeTab={changeTab}>
