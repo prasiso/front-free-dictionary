@@ -1,11 +1,16 @@
 "use client";
-import { useWordListStore, useHistoryListStore } from "@/store";
+import {
+  useWordListStore,
+  useHistoryListStore,
+  useFavoriteListStore,
+} from "@/store";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 export function ButtonNextAndBack() {
   const query = useSearchParams();
   const result = useWordListStore((state) => state.result);
   const dataHistory = useHistoryListStore((state) => state.data);
+  const dataFavorite = useFavoriteListStore((state) => state.data);
   const entrie = query.get("entrie");
   const [hasPrev, setHasPrev] = useState(false);
   const [hasNext, setHasNext] = useState(false);
@@ -22,6 +27,8 @@ export function ButtonNextAndBack() {
   }, [entrie]);
   function validNextOrBack() {
     const { ind, data } = foundEntrie();
+    setHasNext(false);
+    setHasPrev(false);
     if (ind === -1) {
       setHasNext(true);
       setHasPrev(true);
@@ -50,7 +57,11 @@ export function ButtonNextAndBack() {
     if (result.tab === "history") {
       return notRepat(dataHistory);
     }
-      
+
+    if (result.tab === "favorite") {
+      return notRepat(dataFavorite);
+    }
+
     return result.data;
   }
 

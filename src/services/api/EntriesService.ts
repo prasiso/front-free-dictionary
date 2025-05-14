@@ -1,12 +1,11 @@
 import { apiClient } from "@/lib"
 import { WordEntry } from "."
+import { transformQueryInString } from "@/helper"
 
 const router = 'entries/end/'
-export const EntriesGetEntries = async (query: { page: number, limit: number, search?: string }): Promise<any> => {
-    const queryString = Object.entries(query).map(([key, value]) => {
-        return `${key}=${value}`
-    }).join('&')
-    const { data } = await apiClient.get(`${router}?${queryString}`,)
+export const EntriesGetEntries = async (arg: { page: number, limit: number, search?: string }): Promise<any> => {
+    const query = transformQueryInString(arg)
+    const { data } = await apiClient.get(`${router}?${query}`,)
     return data
 }
 

@@ -5,9 +5,9 @@ const storeCreator: StateCreator<ListHistory<any[]>> = (set) => ({
     data: [],
     setData: ((data) => set(() => ({ data }))),
 })
-export const useHistoryListStore = create(
+export const useFavoriteListStore = create(
     persist(storeCreator, {
-        name: 'history-list-storage',
+        name: 'favorite-list-storage',
         storage: createJSONStorage(() => localStorage)
     })
 )

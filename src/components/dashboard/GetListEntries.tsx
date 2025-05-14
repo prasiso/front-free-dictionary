@@ -1,6 +1,6 @@
 "use client";
 import { TabPanel, Tabs } from "@/components";
-import { ListEntrie, ListHistory } from "./list";
+import { ListEntrie, ListHistory, ListFavorite } from "./list";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { useWordListStore } from "@/store";
@@ -35,7 +35,7 @@ export function GetListEntries() {
     setResult({
       tab: 'word'
     })
-  })
+  }, [])
   return (
     <AnimatePresence>
       <motion.div
@@ -50,8 +50,9 @@ export function GetListEntries() {
         <Tabs changeTab={changeTab}>
           {tabs.map((tab, ind) => (
             <TabPanel key={ind} label={tab.label} type={tab.type}>
-              {tab.type === "history" && <ListHistory />}
               {tab.type === "word" && <ListEntrie />}
+              {tab.type === "history" && <ListHistory />}
+              {tab.type === "favorite" && <ListFavorite />}
             </TabPanel>
           ))}
         </Tabs>

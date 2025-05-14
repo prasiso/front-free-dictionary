@@ -5,15 +5,17 @@ import { useEffect, useRef } from "react";
 import { ComponentListEntrie } from "./ComponentListEntrie";
 import { useUI } from "@/context";
 import { catchException } from "@/helper";
+import { useUpdateState } from "@/hooks";
 export function ListEntrie({ className }: { className?: string }) {
   const result = useWordListStore((state) => state.result);
   const setResult = useWordListStore((state) => state.setResult);
   const resetSearch = useWordListStore((state) => state.resetSearch);
   const router = useRouter();
+  const fetchRequest = useRef<boolean>(false);
   const { showAlert, showLoading, setLoading } = useUI();
   const time = useRef<NodeJS.Timeout | null>(null);
   const searchParms = useSearchParams();
-  const searchString = searchParms.get("search") ?? ""
+  const searchString = searchParms.get("search") ?? "";
   useEffect(() => {
     setLoading(true);
     const page = searchParms.get("page");
@@ -60,6 +62,8 @@ export function ListEntrie({ className }: { className?: string }) {
     search: string;
   }) => {
     try {
+      if (fetchRequest.current) return;
+      fetchRequest.current = true;
       const res = await EntriesGetEntries({
         page,
         limit,
@@ -85,12 +89,12 @@ export function ListEntrie({ className }: { className?: string }) {
       const message = catchException(error);
       showAlert({ type: "error", message });
     } finally {
+      fetchRequest.current = false;
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    ;
     if (!searchString) return;
     setResult({ search: searchString });
   }, [searchString]);
@@ -98,17 +102,22 @@ export function ListEntrie({ className }: { className?: string }) {
   useEffect(() => {
     UpdateQuery();
   }, [result.page]);
-  useEffect(() => {
-    const limit = Number(searchParms.get("limit") || "10");
-    const page = Number(searchParms.get("page") || "1");
-    const search = searchString;
-    setResult({
-      limit,
-      page,
-      search,
-    });
-    fetchData({ limit, page, search });
-  }, [searchParms.get("page"), searchString]);
+  useUpdateState(
+    () => {
+      const limit = Number(searchParms.get("limit") || "10");
+      const page = Number(searchParms.get("page") || "1");
+      const search = searchString;
+      setResult({
+        limit,
+        page,
+        search,
+      });
+      fetchData({ limit, page, search });
+    },
+    [searchParms.get("page"), searchString],
+    true
+  );
+
   function actionSearch(inp: string) {
     setResult({ search: inp });
     if (time.current) {
