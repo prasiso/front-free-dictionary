@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { GetRowAudio } from "./unique/GetRowAudio";
 import { IPropsRowAudio } from "@/types";
 import { AnimatePresence, motion } from "framer-motion";
+import { useWordListStore } from "@/store";
 
 export function GetUniqueEntrie() {
   const { showAlert, showLoading, setLoading } = useUI();
@@ -14,6 +15,7 @@ export function GetUniqueEntrie() {
   const [body, setBody] = useState<WordEntry | undefined>(undefined);
   const query = useSearchParams();
   const entrie = query.get("entrie");
+  const setResult = useWordListStore((state) => state.setResult);
   async function HandleSearchEntrie() {
     try {
       await showLoading(async () => {
@@ -35,6 +37,9 @@ export function GetUniqueEntrie() {
   }
   function closeGetUnique() {
     setBody(undefined);
+    setResult({
+      entrie: ''
+    })
   }
 
   async function playAudio(row: IPropsRowAudio) {

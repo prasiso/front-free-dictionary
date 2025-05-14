@@ -8,12 +8,29 @@ const storeCreator: StateCreator<ListState<string[]>> = (set) => ({
         data: [],
         limit: 10,
         search: '',
+        hasPrev: false,
+        hasNext: false
     },
     setResult:
         (body: Partial<Result<string[]>>) => set((state) => ({ result: { ...state.result, ...body }, })),
+    resetSearch: () => set((state) => {
+        return {
+            result: {
+                page: 1,
+                hasPrev: false,
+                hasNext: false,
+                entrie: state.result.entrie,
+                data: [],
+                limit: 200,
+                search: state.result.search,
+            }
+        }
+    }),
     reset: () => set({
         result: {
             page: 1,
+            hasPrev: false,
+            hasNext: false,
             entrie: '',
             data: [],
             limit: 10,

@@ -8,24 +8,44 @@ import { catchExcpetion } from "@/helper";
 export function ListEntrie() {
   const result = useWordListStore((state) => state.result);
   const setResult = useWordListStore((state) => state.setResult);
+  const resetSearch = useWordListStore((state) => state.resetSearch);
   const router = useRouter();
   const { showAlert, showLoading, setLoading } = useUI();
   const time = useRef<NodeJS.Timeout | null>(null);
   const searchParms = useSearchParams();
+  useEffect(() => {
+    setLoading(true)
+    const page = searchParms.get("page");
+    const limit = searchParms.get("limit");
+    const search = searchParms.get("search");
+    const entrie = searchParms.get("entrie");
+    result.entrie = String(entrie);
+    result.limit = Number(limit) ?? 40;
+    result.page = Number(page) ?? 1;
+    result.search = String(search);
+    setResult(result);
+  }, []);
   function UpdateQuery() {
     const query = new URLSearchParams();
     query.set("page", String(result.page));
     query.set("limit", String(result.limit));
-    if (result.search || result.search == "")
-      query.set("search", result.search);
-    if (result.entrie) query.set("entrie", result.entrie);
+    query.set("search", result.search ?? "");
+    query.set("entrie", result.entrie ?? "");
     router.replace(`?${query.toString()}`, { scroll: false });
   }
   async function clickWord(entrie: string) {
+    if (result.entrie === entrie) {
+      result.entrie = "";
+      UpdateQuery();
+      return await setResult({
+        entrie: "",
+      });
+    }
+
     await setResult({
       entrie,
     });
-    result.entrie = entrie
+    result.entrie = entrie;
     UpdateQuery();
   }
 
@@ -43,21 +63,26 @@ export function ListEntrie() {
     search: string;
   }) => {
     try {
-      await showLoading(async () => {
-        const data = await EntriesGetEntries({
-          page,
-          limit,
-          search,
-        });
-        setResult({
-          data: data.results,
-        });
+      const res = await EntriesGetEntries({
+        page,
+        limit,
+        search,
       });
+      const data = [...result.data, ...res.results];
+      setResult({
+        data,
+        hasNext: res.hasNext,
+        hasPrev: res.hasPrev
+      });
+      result.data = data;
+      result.hasNext = res.hasNext;
+      result.hasPrev = res.hasPrev;
     } catch (error) {
       const message = catchExcpetion(error);
       showAlert({ type: "error", message });
     } finally {
-      setLoading(false);
+      setLoading(false)
+
     }
   };
 
@@ -75,7 +100,7 @@ export function ListEntrie() {
       search,
     });
     fetchData({ limit, page, search });
-  }, [searchParms]);
+  }, [searchParms.get("page"), searchParms.get("search")]);
   function actionSearch(inp: string) {
     setResult({ search: inp });
     if (time.current) {
@@ -83,6 +108,7 @@ export function ListEntrie() {
     }
     time.current = setTimeout(() => {
       setLoading(true);
+      resetSearch()
       let queryParams = `search=${inp}`;
       searchParms.forEach((value, key) => {
         if (key === "search") return;
@@ -91,11 +117,16 @@ export function ListEntrie() {
       router.replace(`?${queryParams}`, { scroll: false });
     }, 1500);
   }
+  async function LoadMore() {
+    const limit = Number(searchParms.get("limit") || "10");
+    const page = Number(searchParms.get("page") || "1") + 1;
+    await setResult({ page, limit });
+  }
   return (
     <ComponentListEntrie
       data={result.data}
-      hasMore={true}
-      onLoadMore={fetchData}
+      hasMore={result.hasNext}
+      onLoadMore={LoadMore}
       search={result.search}
       wordActive={result.entrie}
       onSearchChange={actionSearch}
