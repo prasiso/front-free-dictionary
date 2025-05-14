@@ -2,7 +2,6 @@
 import { TabPanel, Tabs } from "@/components";
 import { ListEntrie } from "./list";
 import { AnimatePresence, motion } from "framer-motion";
-
 export function GetListEntries() {
   const tabs = [
     {
@@ -18,6 +17,7 @@ export function GetListEntries() {
       type: "history",
     },
   ] as { label: string; type: "word" | "history" | "favorite" }[];
+
   const changeTab = (
     ind: number,
     tab: { label: string; type: "word" | "history" | "favorite" }
@@ -26,9 +26,7 @@ export function GetListEntries() {
   };
   return (
     <AnimatePresence>
-      <motion.div layout 
-        className="flex w-full p-4 justify-center aligm"
-      >
+      <motion.div layout className="flex w-full p-4 justify-center aligm-center hidden lg:block">
         <Tabs changeTab={changeTab}>
           {tabs.map((tab, ind) => (
             <TabPanel key={ind} label={tab.label} type={tab.type}>

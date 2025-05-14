@@ -51,7 +51,7 @@ export function ListEntrie() {
 
   useEffect(() => {
     UpdateQuery();
-  }, [result.page, result.limit]);
+  }, [result.page, result.limit, result.entrie]);
 
   const fetchData = async ({
     limit,

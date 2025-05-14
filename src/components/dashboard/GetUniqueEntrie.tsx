@@ -16,11 +16,15 @@ export function GetUniqueEntrie() {
   const query = useSearchParams();
   const entrie = query.get("entrie");
   const setResult = useWordListStore((state) => state.setResult);
+  const result = useWordListStore((state) => state.result);
   async function HandleSearchEntrie() {
     try {
       await showLoading(async () => {
         if (!entrie) {
           setBody(undefined);
+          setResult({entrie: ''})
+          result.entrie = ''
+          
           return;
         }
         const resp = await EntriesGetEntrie(String(entrie));
@@ -62,7 +66,7 @@ export function GetUniqueEntrie() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="max-w-sm w-full bg-purple-50 rounded-lg p-5 shadow-sm relative"
+            className=" w-full lg:max-w-sm  bg-purple-50 rounded-lg p-5 shadow-sm relative"
           >
             <button
               aria-label="Close"
