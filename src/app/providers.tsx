@@ -1,4 +1,8 @@
-import { UIProvider } from "@/context/UIContext";
+import { UIProvider } from "@/context";
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <UIProvider> {children}</UIProvider>;
+  return (
+    <UIProvider>
+      {children}
+    </UIProvider>
+  );
 }

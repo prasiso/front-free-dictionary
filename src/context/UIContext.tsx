@@ -1,7 +1,14 @@
 "use client";
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { UIContextProps } from "./interface/UIContextProps";
 import { AlertData, AlertType } from "@/components";
+import { AlertService } from "@/services";
 
 const UIContext = createContext<UIContextProps | undefined>(undefined);
 export const UIProvider = ({ children }: { children: ReactNode }) => {
@@ -17,13 +24,13 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
     duration?: number;
   }) => {
     setAlert({ type, message });
-   
-  return new Promise<void>(resolve => {
-    setTimeout(() => {
-      setAlert(null);
-      resolve();
-    }, duration);
-  });
+
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        setAlert(null);
+        resolve();
+      }, duration);
+    });
   };
   async function showLoading(operation: () => Promise<T>): Promise<T> {
     setLoading(true);
@@ -39,6 +46,13 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    AlertService.registerHandler(
+      (message: string, type: AlertType = "error", duration: number = 3500) =>
+        showAlert({ type, message, duration })
+    );
+  }, []);
 
   return (
     <UIContext.Provider

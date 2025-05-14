@@ -4,7 +4,7 @@ import AuthForm from "@/components/auth/AuthForm";
 import { useRouter } from "next/navigation";
 import { AuthPostSignUp, authSignUpBody } from "@/services";
 import { useUI } from "@/context/UIContext";
-import { catchExcpetion, setUser } from "@/helper";
+import { catchException, setUser } from "@/helper";
 export default function SignUpPage() {
   const { showLoading, setLoading, showAlert } = useUI();
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function SignUpPage() {
 
       router.push("/dashboard");
     } catch (error) {
-      const message = catchExcpetion(error);
+      const message = catchException(error);
       showAlert({ type: "error", message });
     } finally {
       setLoading(false);

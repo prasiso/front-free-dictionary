@@ -1,8 +1,7 @@
 "use client"
-import { useUI } from '@/context/UIContext';
-import { getUser, removeUser, setUser } from '@/helper';
+import { getUser, logout } from '@/helper';
+import { AlertService } from '@/services';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
 const apiClient = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL,
 })
@@ -15,18 +14,11 @@ apiClient.interceptors.request.use((config) => {
 
 apiClient.interceptors.response.use(
     (response) => response,
-    (error) => {
-        const router = useRouter()
-        const { showAlert } = useUI()
-        if (error.status === 401) {
-            removeUser()
-            showAlert({
-                type: "error",
-                message: "Logue-se novamente"
-            })
-            router.push('/login')
-        }
+    async (error) => {
         console.error('AXIOS ERROR:', error)
+        if (error.status == 401) {
+            await logout()
+        }
         return Promise.reject(error)
     }
 )

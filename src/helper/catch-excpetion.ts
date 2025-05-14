@@ -1,11 +1,11 @@
-export const catchExcpetion = (error: any) => {
+
+export const catchException = (error: any) => {
     let message = '⚠️ Ocorreu um erro inesperado. Estamos trabalhando para resolver o mais rápido possível.'
-    const data = error?.response.data.message
+    const data = error?.response?.data?.message
     if (data && Array.isArray(data))
         message = data.join('\n')
     if (data)
         message = data
-    if(!data)
-        console.error(error)
+
     return message
 }

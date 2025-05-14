@@ -1,4 +1,5 @@
 export * from './Input'
 export * from './Loading'
+export * from './Tabs'
 export * from './Alert'
 export * from './UIoverlay'
