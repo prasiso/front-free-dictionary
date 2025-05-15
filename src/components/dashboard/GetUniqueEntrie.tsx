@@ -65,8 +65,8 @@ export function GetUniqueEntrie() {
         fav ? EntriesPostFav(String(body.word)) : EntriesPostUnFav(body.word)
       );
       const message = fav
-        ? "Palavra Favoritada com sucesso!"
-        : "Palavra Desfavoritada com sucesso!";
+        ? "Favorite Word Successfully!"
+        : "Word successfully unfavorite!";
       showAlert({ type: "success", message });
       body.fav = fav;
       setBody(body);
@@ -98,7 +98,7 @@ export function GetUniqueEntrie() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className=" w-full lg:max-w-sm  bg-purple-50 rounded-lg p-5 shadow-sm relative"
+            className=" w-full lg:max-w-sm  bg-purple-50 rounded-lg p-5 shadow-sm relative z-10"
           >
             <div className="flex flex-nowrap justify-around items-center mb-4">
               <button
