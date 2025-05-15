@@ -6,7 +6,7 @@ import { ComponentListEntrie } from "./ComponentListEntrie";
 import { useUI } from "@/context";
 import { catchException, format_date } from "@/helper";
 import { useUpdateState } from "@/hooks";
-import { useHistoryListStore } from "@/store";
+import { useHistoryListStore, useWordListStore } from "@/store";
 import { _IDataComponent } from "./interface";
 
 export function ListHistory({ className }: { className?: string }) {
@@ -16,7 +16,8 @@ export function ListHistory({ className }: { className?: string }) {
   const data = useHistoryListStore((set) => set.data);
   const setData = useHistoryListStore((set) => set.setData);
   const [hasMore, setHasMore] = useState(false);
-  const [entrie, setEntrie] = useState("");
+  const entrie = useWordListStore((state) => state.result.entrie);
+  const setEntrie = useWordListStore((state) => state.setResult);
   const [refresh, setRefreshTrigger] = useState(0);
 
   const time = useRef<NodeJS.Timeout | null>(null);
@@ -27,6 +28,7 @@ export function ListHistory({ className }: { className?: string }) {
   const { showAlert, setLoading } = useUI();
 
   useEffect(() => {
+    setLoading(true);
     fetchData();
   }, []);
 
@@ -40,7 +42,7 @@ export function ListHistory({ className }: { className?: string }) {
   }
 
   async function clickWord(word: string) {
-    setEntrie(word);
+    setEntrie({ entrie: word });
   }
 
   const fetchData = async () => {
@@ -52,12 +54,10 @@ export function ListHistory({ className }: { className?: string }) {
         limit: 50,
         search,
       });
-      const words = res.results.map(
-        (item: _IDataComponent) => ({
-          word: item.word,
-          added: format_date(item.added),
-        })
-      );
+      const words = res.results.map((item: _IDataComponent) => ({
+        word: item.word,
+        added: format_date(item.added),
+      }));
       const body = page === 1 ? [] : data;
       const updatedData = body.concat(words);
 
@@ -77,7 +77,7 @@ export function ListHistory({ className }: { className?: string }) {
   };
 
   useUpdateState(() => {
-    setEntrie(query.get("entrie") ?? "");
+    setEntrie({ entrie: query.get("entrie") ?? "" });
   }, [query.get("entrie")]);
 
   useUpdateState(() => {

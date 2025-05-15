@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import { TabPanel, Tabs } from "@/components";
 import { ListEntrie, ListHistory, ListFavorite } from "./list";
@@ -6,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { useWordListStore } from "@/store";
 import { useEffect, useState } from "react";
-export function GetListEntries() {
+export function   GetListEntries() {
   const searchParms = useSearchParams();
   const [entrie, setEntrie] = useState('');
 

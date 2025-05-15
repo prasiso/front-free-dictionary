@@ -96,6 +96,7 @@ export function ListEntrie({ className }: { className?: string }) {
 useUpdateState(
     (init:boolean) => {
       if (init && result.tab == "word") {
+        setLoading(true)
         resetSearch();
       }
       const limit = Number(searchParms.get("limit") || "50");

@@ -6,7 +6,7 @@ import { ComponentListEntrie } from "./ComponentListEntrie";
 import { useUI } from "@/context";
 import { catchException, format_date } from "@/helper";
 import { useUpdateState } from "@/hooks";
-import { useFavoriteListStore } from "@/store";
+import { useFavoriteListStore, useWordListStore } from "@/store";
 import { _IDataComponent } from "./interface";
 
 export function ListFavorite({ className }: { className?: string }) {
@@ -16,9 +16,9 @@ export function ListFavorite({ className }: { className?: string }) {
   const data = useFavoriteListStore((set) => set.data);
   const setData = useFavoriteListStore((set) => set.setData);
   const [hasMore, setHasMore] = useState(false);
-  const [entrie, setEntrie] = useState("");
   const [refresh, setRefreshTrigger] = useState(0);
-
+  const entrie = useWordListStore((state) => state.result.entrie);
+  const setEntrie = useWordListStore((state) => state.setResult);
   const time = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
   const query = useSearchParams();
@@ -35,10 +35,11 @@ export function ListFavorite({ className }: { className?: string }) {
     router.push(`?${params.toString()}`);
   }
 
-  async function clickWord(word: string) {
-    setEntrie(word);
+  async function clickWord(entrie: string) {
+    setEntrie({ entrie });
   }
   useEffect(() => {
+    setLoading(true);
     fetchData();
   }, []);
 
@@ -73,7 +74,7 @@ export function ListFavorite({ className }: { className?: string }) {
     }
   };
   useUpdateState(() => {
-    setEntrie(query.get("entrie") ?? "");
+    setEntrie({ entrie: query.get("entrie") ?? "" });
   }, [query.get("entrie")]);
 
   useUpdateState(() => {
@@ -106,7 +107,7 @@ export function ListFavorite({ className }: { className?: string }) {
     setPage((page) => page + 1);
   }
   useUpdateState(() => {
-    setEntrie(query.get("entrie") ?? "");
+    setEntrie({ entrie: query.get("entrie") ?? "" });
   }, [query.get("entrie")]);
   return (
     <div className={className}>

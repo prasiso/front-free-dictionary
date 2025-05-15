@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import {
   useWordListStore,
   useHistoryListStore,
@@ -25,12 +25,12 @@ export function ButtonNextAndBack() {
 
   useEffect(() => {
     validNextOrBack();
-  }, [entrie]);
+  }, [entrie, result.tab]);
   function validNextOrBack() {
     const { ind, data } = foundEntrie();
     setHasNext(false);
     setHasPrev(false);
-    if (ind === -1) {
+    if (!data.length) {
       setHasNext(true);
       setHasPrev(true);
     }
@@ -41,6 +41,7 @@ export function ButtonNextAndBack() {
       setHasPrev(true);
     }
   }
+  
 
   function foundEntrie() {
     const data = whichStoreToUse();
@@ -69,7 +70,9 @@ export function ButtonNextAndBack() {
   function nextOrBack(isPlus = true) {
     const { ind, data } = foundEntrie();
     if (ind === -1) {
-      return;
+      if (!data.length) return;
+      const { word } = data[0];
+     return updateEntrie(word);
     }
 
     const newEntrie = data[isPlus ? ind + 1 : ind - 1];
