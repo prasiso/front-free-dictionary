@@ -1,9 +1,9 @@
 import { apiClient } from "@/lib"
-import { WordEntry } from "."
+import { WordEntry, RespGetEntries } from "."
 import { transformQueryInString } from "@/helper"
 
 const router = 'entries/end/'
-export const EntriesGetEntries = async (arg: { page: number, limit: number, search?: string }): Promise<any> => {
+export const EntriesGetEntries = async (arg: { page: number, limit: number, search?: string }): Promise<RespGetEntries> => {
     const query = transformQueryInString(arg)
     const { data } = await apiClient.get(`${router}?${query}`,)
     return data

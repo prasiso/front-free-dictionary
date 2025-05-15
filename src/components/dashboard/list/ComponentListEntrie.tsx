@@ -1,6 +1,7 @@
 import { Input } from "@/components";
 import { useUI } from "@/context";
 import { useEffect, useRef, useCallback } from "react";
+import { _IComponentListEntrie, _IDataComponent } from "./interface";
 
 export function ComponentListEntrie({
   data,
@@ -11,7 +12,7 @@ export function ComponentListEntrie({
   onSearchChange,
   totalDocs = 0,
   clickWord,
-}: any) {
+}:_IComponentListEntrie) {
   const observer = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const isRequest = useRef<boolean>(false);
@@ -53,7 +54,7 @@ export function ComponentListEntrie({
             label="Search"
             name="search"
             value={search}
-            onChange={(e) => onSearchChange(e.target.value)}
+            onChange={(e:React.ChangeEvent<HTMLInputElement>) => onSearchChange(e.target.value)}
           />
         </div>
         <span className="text-blue-500 font-bold">Total Found: {Number(totalDocs).toLocaleString('pt-br')}</span>
@@ -61,7 +62,7 @@ export function ComponentListEntrie({
 
       <div className="flex-1 overflow-auto">
         <ul className="grid sm:grid-cols-3 md:grid-cols-5 gap-4 grid-flow-row auto-rows-[100px] h-[500px] font-sans text-base p-2">
-          {data?.map((word: any, i: number) => (
+          {data?.map((word: _IDataComponent, i: number) => (
             <li
               ref={data.length === i + 1 ? lastElementRef : null}
               key={i}

@@ -1,7 +1,8 @@
 import { create, StateCreator } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { ListHistory,} from '.'
-const storeCreator: StateCreator<ListHistory<any[]>> = (set) => ({
+import { _IDataComponent } from '@/components/dashboard/list/interface'
+const storeCreator: StateCreator<ListHistory<_IDataComponent[]>> = (set) => ({
     data: [],
     setData: ((data) => set(() => ({ data }))),
 })

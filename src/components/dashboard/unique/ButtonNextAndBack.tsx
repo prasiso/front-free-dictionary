@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   useWordListStore,
   useHistoryListStore,
@@ -6,6 +6,7 @@ import {
 } from "@/store";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { _IDataComponent } from "../list/interface";
 export function ButtonNextAndBack() {
   const query = useSearchParams();
   const result = useWordListStore((state) => state.result);
@@ -16,7 +17,7 @@ export function ButtonNextAndBack() {
   const [hasNext, setHasNext] = useState(false);
   const router = useRouter();
 
-  function updateEntrie(entries) {
+  function updateEntrie(entries: string) {
     const params = new URLSearchParams(query.toString());
     params.set("entrie", entries);
     router.push(`?${params.toString()}`);
@@ -43,12 +44,12 @@ export function ButtonNextAndBack() {
 
   function foundEntrie() {
     const data = whichStoreToUse();
-    const ind = data.findIndex((ind) => ind.word === entrie);
+    const ind = data.findIndex((ind: _IDataComponent) => ind.word === entrie);
     return { ind, data };
   }
 
   function whichStoreToUse() {
-    const notRepat = (data) => {
+    const notRepat = (data: _IDataComponent[]) => {
       return data.filter((value, ind, array) => {
         const index = array.findIndex((i) => i.word === value.word);
         return index == ind;

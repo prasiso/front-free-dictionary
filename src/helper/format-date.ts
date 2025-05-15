@@ -1,4 +1,6 @@
-export const format_date = (date: Date) =>{
+export const format_date = (date: string | Date | undefined) =>{
+  if(!date)
+    return
     return new Date(date).toLocaleDateString("pt-br", {
                   day: "2-digit",
                   month: "2-digit",

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { AlertData, AlertType } from "./AlertType";
 import { motion } from "framer-motion";
@@ -15,7 +15,7 @@ export function Alert({ type = "info", message, onClose }: AlertData) {
 
   return (
     <motion.div
-      className={`${baseStyle} ${typeStyle[type]}`}
+      className={`${baseStyle} ${type? typeStyle[type]: ''}`}
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}

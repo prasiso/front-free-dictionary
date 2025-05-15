@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import AuthForm from "@/components/auth/AuthForm";
 import { useUI } from "@/context/UIContext";
@@ -20,7 +20,7 @@ export default function SignIn() {
       await showAlert({
         type: "success",
         message:
-          "Usuário encontrado com sucesso, você será redirecionado ao dashboard!",
+          "User found successfully, you will be redirected to the dashboard!",
       });
       router.push('/dashboard')
     } catch (error) {
@@ -34,7 +34,7 @@ export default function SignIn() {
     <AuthForm
       title="Login"
       Submit={handleSignIn}
-      linkText="Não tem conta? Cadastre-se"
+      linkText="Don't have an account? Sign up"
       linkHref="/signup"
       isSignUp={false}
     />

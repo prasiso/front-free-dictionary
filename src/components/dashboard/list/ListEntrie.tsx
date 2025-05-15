@@ -1,3 +1,4 @@
+'use client'
 import { EntriesGetEntries } from "@/services";
 import { useWordListStore } from "@/store";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -65,7 +66,7 @@ export function ListEntrie({ className }: { className?: string }) {
       });
       const data = [
         ...result.data,
-        ...res.results.map((res) => ({ word: res })),
+        ...res.results.map((res: string) => ({ word: res })),
       ];
       if (!data.length)
         showAlert({ type: "info", message: "Not found list of word" });
@@ -93,7 +94,7 @@ export function ListEntrie({ className }: { className?: string }) {
     setResult({ search: searchString });
   }, [searchString]);
 useUpdateState(
-    (init) => {
+    (init:boolean) => {
       if (init && result.tab == "word") {
         resetSearch();
       }

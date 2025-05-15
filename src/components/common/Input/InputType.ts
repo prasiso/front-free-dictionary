@@ -1,15 +1,15 @@
-import { Control, FieldErrors, RegisterOptions } from "react-hook-form"
+import { Control, FieldErrors, FieldValues, Path, RegisterOptions } from "react-hook-form"
 
-export interface InputType {
-    name: string;
+export interface InputType< T extends FieldValues = FieldValues> {
+    name: Path<T>;
     label: string;
     type?: string;
     placeholder?: string;
-    control?: Control<any>;
+    control?: Control<T>;
     required?: boolean;
     showEye?: boolean;
     errors?: FieldErrors;
-    rules?: RegisterOptions
+    rules?: RegisterOptions<T>
     value?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }

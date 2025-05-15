@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import Link from "next/link";
 import { AuthProps } from "./AuthType";
 import { RegisterOptions, useForm } from "react-hook-form";
@@ -10,33 +10,34 @@ export default function AuthForm({
   linkHref,
   isSignUp = false,
 }: AuthProps) {
-  const { control, handleSubmit } = useForm();
-  const rulesEmail: RegisterOptions = {
+  const { control, handleSubmit } = useForm<{email: string, password: string, name: string}>();
+  const rulesEmail: RegisterOptions<{email: string, password: string, name: string}> = {
     pattern: {
       value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
       message: "Digite um e-mail válido",
     },
+    deps: ["email", "password", "name"]
   };
-  const rulesPass: RegisterOptions = {
+  const rulesPass: RegisterOptions<{email: string, password: string, name: string}> = {
     validate: (value) => {
       if(!isSignUp)
         return
-      if (value.length < 8) return "A Senha deve ter pelo menos 8 caracteres";
+      if (value.length < 8) return "Password must be at least 8 characters long";
       if (!/[A-Z]/.test(value))
-        return "A senha deve conter pelo menos uma letra maiúscula.";
+        return "The password should contain at least 1 uppercase character.";
       if (!/[a-z]/.test(value)) {
-        return "A senha deve conter pelo menos uma letra minúscula.";
+        return "Password must contain at least one lowercase letter.";
       }
       if (!/[0-9]/.test(value)) {
-        return "A senha deve conter pelo menos um número.";
+        return "Password must contain at least one number.";
       }
       if (!/[\W_]/.test(value)) {
-        return "A senha deve conter pelo menos um caractere especial.";
+        return "Password must contain at least one special character.";
       }
       return true;
     },
   };
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: {email: string, password: string, name: string}) => {
     const { email, password, name } = data;
     Submit({ email, password, name });
   };
@@ -49,7 +50,7 @@ export default function AuthForm({
       >
         <h1 className="text-xl font-bold mb-4"> {title} </h1>
         {isSignUp && (
-          <Input label="Nome" name="name" control={control} required />
+          <Input label="Name" name="name" control={control} required />
         )}
         <Input
           label="Email"
@@ -59,7 +60,7 @@ export default function AuthForm({
           rules={rulesEmail}
         />
         <Input
-          label="Senha"
+          label="Password"
           name="password"
           type="password"
           showEye={true}
@@ -68,7 +69,7 @@ export default function AuthForm({
           rules={rulesPass}
         />
         <button className="w-full bg-blue-500 text-white p-2 rounded mb-4">
-          Entrar
+          Send
         </button>
         <Link href={linkHref} className="text-sm text-blue-500 hover:underline">
           {linkText}
