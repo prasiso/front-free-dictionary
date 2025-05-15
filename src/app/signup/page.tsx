@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import AuthForm from "@/components/auth/AuthForm";
 import { useRouter } from "next/navigation";
@@ -18,7 +18,7 @@ export default function SignUpPage() {
       showAlert({
         type: "success",
         message:
-          "Usuário cadastrado com sucesso! você será redirecionado para o dashboard",
+          "User registered successfully! You will be redirected to the dashboard",
       });
 
       router.push("/dashboard");
@@ -31,9 +31,9 @@ export default function SignUpPage() {
   };
   return (
     <AuthForm
-      title="Cadastro"
+      title="Sign Up"
       Submit={handleSignUp}
-      linkText="Já tem conta? Faça Login"
+      linkText="Already have an account? Log in"
       linkHref="/signin"
       isSignUp={true}
     />

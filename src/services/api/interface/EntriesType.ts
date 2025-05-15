@@ -42,3 +42,13 @@ export type WordEntry = {
   history?: history 
   fav?: fav | boolean
 };
+
+
+export type RespGetEntries = {
+  	"results": string[],
+	"totalDocs": number,
+	"page": number,
+	"totalPage": number,
+	"hasNext": boolean,
+	"hasPrev": boolean
+}

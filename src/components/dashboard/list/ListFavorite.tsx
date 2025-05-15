@@ -1,3 +1,4 @@
+'use client'
 import { GetUserFavorite } from "@/services";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -6,6 +7,7 @@ import { useUI } from "@/context";
 import { catchException, format_date } from "@/helper";
 import { useUpdateState } from "@/hooks";
 import { useFavoriteListStore } from "@/store";
+import { _IDataComponent } from "./interface";
 
 export function ListFavorite({ className }: { className?: string }) {
   const [page, setPage] = useState(1);
@@ -46,9 +48,9 @@ export function ListFavorite({ className }: { className?: string }) {
         limit: 50,
         search,
       });
-      const words = res.results.map((item: any) => ({
+      const words = res.results.map((item: _IDataComponent) => ({
         word: item.word,
-        added: format_date(item.added),
+        added: format_date(item?.added),
       }));
       const body = page === 1 ? [] : data;
       const updatedData = body.concat(words);

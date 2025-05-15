@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   createContext,
   ReactNode,
@@ -32,7 +32,7 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
       }, duration);
     });
   };
-  async function showLoading(operation: () => Promise<T>): Promise<T> {
+  async function showLoading(operation: () => void): Promise<void> {
     setLoading(true);
     const MIN_DURATION = 1500;
     const startTime = Date.now();

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaBars, FaTimes } from "react-icons/fa";
@@ -36,7 +36,7 @@ const UserDetails = ({
     }}
     transition={{ duration: 0.2 }}
   >
-    <UserInfo label="Nome" value={name} />
+    <UserInfo label="Name" value={name} />
     <UserInfo label="Email" value={email} />
     <button
       onClick={onLogout}
@@ -113,7 +113,7 @@ export const Header = () => {
   if (!user) return null;
 
   return (
-    <header className="flex justify-between items-center px-4 md:px-6 h-16 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-sans relative z-30">
+    <div className="flex justify-between items-center px-4 md:px-6 h-16 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-sans relative z-30">
       <div className="font-bold text-base md:text-lg select-none" aria-label="Logo">
         Free Dictionary
       </div>
@@ -160,6 +160,6 @@ export const Header = () => {
           />
         )}
       </AnimatePresence>
-    </header>
+    </div>
   );
 };

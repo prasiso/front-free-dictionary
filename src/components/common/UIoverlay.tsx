@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { useUI } from "@/context/UIContext";
 import { Loading, Alert } from ".";
 import { AnimatePresence } from "framer-motion";

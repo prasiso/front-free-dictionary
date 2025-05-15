@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { DependencyList, useEffect, useRef } from 'react';
 
-export function useUpdateState(back, dep, firstRender = false) {
+export function useUpdateState(back: (init: boolean) => void, dep:DependencyList, firstRender = false) {
   const isFirstRender = useRef(true);
 
   useEffect(() => {

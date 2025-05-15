@@ -1,10 +1,10 @@
-'use client'
+'use client';
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Controller } from "react-hook-form";
+import { Controller, FieldValues } from "react-hook-form";
 import { InputType } from ".";
 
-export function Input({
+export function Input<T extends FieldValues>({
   label,
   name,
   required,
@@ -15,7 +15,7 @@ export function Input({
   placeholder,
   value,
   onChange,
-}: InputType) {
+}: InputType<T>) {
   const [showPassword, setShowPassword] = useState(true);
   const isPassword = type === "password";
 
@@ -25,7 +25,8 @@ export function Input({
   };
 
   const renderPasswordToggle = () =>
-    isPassword && showEye && (
+    isPassword &&
+    showEye && (
       <span
         onClick={() => setShowPassword(!showPassword)}
         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
@@ -56,14 +57,19 @@ export function Input({
         />
         {renderPasswordToggle()}
       </div>
-      {errorMessage && <p className="text-red-500 text-sm mt-1">{errorMessage}</p>}
+      {errorMessage && (
+        <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+      )}
     </>
   );
 
   return (
     <div className="mb-4">
       {label && (
-        <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor={name}
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           {label}
         </label>
       )}
@@ -73,7 +79,14 @@ export function Input({
           name={name}
           control={control}
           rules={{
-            required: required ? `O campo ${label} é obrigatório` : false,
+            ...(required
+              ? {
+                  required: {
+                    value: true,
+                    message: `O campo ${label} é obrigatório`,
+                  },
+                }
+              : {}),
             ...rules,
           }}
           render={({ field, fieldState }) =>

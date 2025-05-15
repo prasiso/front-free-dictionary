@@ -1,7 +1,8 @@
 import { create, StateCreator } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { ListState, Result } from '.'
-const storeCreator: StateCreator<ListState<string[]>> = (set) => ({
+import { _IDataComponent } from '@/components/dashboard/list/interface'
+const storeCreator: StateCreator<ListState<_IDataComponent[]>> = (set) => ({
     result: {
         page: 1,
         entrie: '',
@@ -14,7 +15,7 @@ const storeCreator: StateCreator<ListState<string[]>> = (set) => ({
         hasNext: false
     },
     setResult:
-        (body: Partial<Result<string[]>>) => set((state) => ({ result: { ...state.result, ...body }, })),
+        (body: Partial<Result<_IDataComponent[]>>) => set((state) => ({ result: { ...state.result, ...body }, })),
     resetSearch: () => set((state) => {
         return {
             result: {
@@ -26,6 +27,7 @@ const storeCreator: StateCreator<ListState<string[]>> = (set) => ({
                 tab: state.result.tab,
                 limit: 50,
                 search: state.result.search,
+                totalDocs: 0,
             }
         }
     }),

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   Children,
   isValidElement,
@@ -31,7 +31,7 @@ export function Tabs({
       const isNamedComponent =
         typeof type === "function" &&
         "displayName" in type &&
-        (type as any).displayName === "TabPanel";
+        (type as {displayName?: string}).displayName === "TabPanel";
 
       return isNamedComponent;
     }

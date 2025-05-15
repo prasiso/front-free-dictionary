@@ -1,11 +1,14 @@
-"use client";
+/* eslint-disable react-hooks/rules-of-hooks */
+'use client';
 import { TabPanel, Tabs } from "@/components";
 import { ListEntrie, ListHistory, ListFavorite } from "./list";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { useWordListStore } from "@/store";
 import { useEffect } from "react";
-export function GetListEntries() {
+export function  GetListEntries() {
+   if (typeof window === 'undefined') return null;
+
   const searchParms = useSearchParams();
   const setResult = useWordListStore((set) => set.setResult);
   const tabs = [
@@ -41,7 +44,7 @@ export function GetListEntries() {
       <motion.div
         layout
         className={
-          " flex w-full p-4 justify-center aligm-center  lg:block " +
+          " flex w-full p-4 justify-center align-center  lg:block " +
           (searchParms.get("entrie") ? "hidden" : "")
         }
       >

@@ -1,3 +1,4 @@
+'use client'
 import { GetUserHistory } from "@/services";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -46,7 +47,7 @@ export function ListHistory({ className }: { className?: string }) {
         limit: 50,
         search,
       });
-      const words = res.results.map((item: any) => ({
+      const words = res.results.map((item: {word: string, added: Date | string}) => ({
         word: item.word,
         added: format_date(item.added),
       }));
