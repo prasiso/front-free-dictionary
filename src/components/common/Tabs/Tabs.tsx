@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import {
   Children,
   isValidElement,
@@ -31,7 +31,7 @@ export function Tabs({
       const isNamedComponent =
         typeof type === "function" &&
         "displayName" in type &&
-        (type as {displayName?: string}).displayName === "TabPanel";
+        (type as { displayName?: string }).displayName === "TabPanel";
 
       return isNamedComponent;
     }
@@ -45,26 +45,26 @@ export function Tabs({
   };
   return (
     <div className="w-full">
-    <div className="text-sm font-medium text-center text-gray-500  ">
-      <ul className="flex flex-wrap -mb-px">
-        {tabs.map((tab, index) => (
-          <li
-            className={
-              (activeIndex == index
-                ? "text-blue-600 border-blue-600 active"
-                : "border-transparent") +
-              "inline-block p-4  rounded-t-lg cursor-pointer hover:text-blue-600 border-b-2 hover:border-blue-600"
-            }
-            key={index}
-            onClick={() => {
-              activeTab(index, tab.props);
-            }}
-          >
-            {tab.props.label}
-          </li>
-        ))}
-      </ul>
-    </div>
+      <div className="text-sm font-medium text-center text-gray-500  ">
+        <ul className="flex flex-wrap -mb-px">
+          {tabs.map((tab, index) => (
+            <li
+              className={[
+                "inline-block p-4  rounded-t-lg cursor-pointer hover:text-blue-600 border-b-2 hover:border-blue-600",
+                activeIndex == index
+                  ? "text-blue-600 border-blue-600 active"
+                  : "border-transparent",
+              ].join(" ")}
+              key={index}
+              onClick={() => {
+                activeTab(index, tab.props);
+              }}
+            >
+              <span>{tab.props.label}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
       <div className="mt-4">{tabs[activeIndex]}</div>
     </div>
   );

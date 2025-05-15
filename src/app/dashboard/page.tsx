@@ -8,8 +8,8 @@ export default function Dashboard() {
       <div className="flex  items-center justify-around p-6">
         <Suspense>
           <GetUniqueEntrie />
+          <GetListEntries />
         </Suspense>
-        <GetListEntries />
       </div>
       <Footer />
     </div>

@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-'use client';
+"use client";
 import { TabPanel, Tabs } from "@/components";
 import { ListEntrie, ListHistory, ListFavorite } from "./list";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { useWordListStore } from "@/store";
-import { useEffect } from "react";
-export function  GetListEntries() {
-   if (typeof window === 'undefined') return null;
-
+import { useEffect, useState } from "react";
+export function GetListEntries() {
   const searchParms = useSearchParams();
+  const [entrie, setEntrie] = useState('');
+
   const setResult = useWordListStore((set) => set.setResult);
   const tabs = [
     {
@@ -39,14 +39,16 @@ export function  GetListEntries() {
       tab: "word",
     });
   }, []);
+  useEffect(() => {
+    setEntrie(searchParms.get("entrie") || "");
+  }, [searchParms.get("entrie")]);
   return (
     <AnimatePresence>
       <motion.div
-        layout
-        className={
-          " flex w-full p-4 justify-center align-center  lg:block " +
-          (searchParms.get("entrie") ? "hidden" : "")
-        }
+        className={[
+          " flex w-full p-4 justify-center items-center  lg:block ",
+          entrie ? "hidden" : "",
+        ].join(" ")}
       >
         <Tabs changeTab={changeTab}>
           {tabs.map((tab, ind) => (
