@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { GetUserHistory } from "@/services";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -7,6 +7,7 @@ import { useUI } from "@/context";
 import { catchException, format_date } from "@/helper";
 import { useUpdateState } from "@/hooks";
 import { useHistoryListStore } from "@/store";
+import { _IDataComponent } from "./interface";
 
 export function ListHistory({ className }: { className?: string }) {
   const [page, setPage] = useState(1);
@@ -24,6 +25,10 @@ export function ListHistory({ className }: { className?: string }) {
   const didSearch = useRef(false);
   const fetchRequest = useRef<boolean>(false);
   const { showAlert, setLoading } = useUI();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   function UpdateQuery() {
     const current = query.get("entrie") ?? "";
@@ -47,10 +52,12 @@ export function ListHistory({ className }: { className?: string }) {
         limit: 50,
         search,
       });
-      const words = res.results.map((item: {word: string, added: Date | string}) => ({
-        word: item.word,
-        added: format_date(item.added),
-      }));
+      const words = res.results.map(
+        (item: _IDataComponent) => ({
+          word: item.word,
+          added: format_date(item.added),
+        })
+      );
       const body = page === 1 ? [] : data;
       const updatedData = body.concat(words);
 

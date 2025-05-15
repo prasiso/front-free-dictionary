@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { GetUserFavorite } from "@/services";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -38,6 +38,9 @@ export function ListFavorite({ className }: { className?: string }) {
   async function clickWord(word: string) {
     setEntrie(word);
   }
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const fetchData = async () => {
     try {
