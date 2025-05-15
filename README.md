@@ -1,5 +1,8 @@
 # FREE-DICTIONARY
 
+## Link
+ https://front-free-dictionary-production.up.railway.app
+
 ## Descrição
 Um sistema onde armezenamos palavras em ingles para sua definição, podendo favoritar e ver seu histórico
 
@@ -11,6 +14,7 @@ Um sistema onde armezenamos palavras em ingles para sua definição, podendo fav
 ## Como instalar
 Ao baixar projeto deve ser dado **npm i**, após **npm run build** para gerar um build e **npm run start** para rodar projeto
 Obs.: Não se esqueça de criar o .env com a variable NEXT_PUBLIC_API_URL que deve conter o link
+
 
 
 >  This is a challenge by [Coodesh](https://coodesh.com/)
